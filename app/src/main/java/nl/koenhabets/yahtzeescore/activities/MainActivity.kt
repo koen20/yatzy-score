@@ -28,7 +28,6 @@ import nl.koenhabets.yahtzeescore.Permissions
 import nl.koenhabets.yahtzeescore.R
 import nl.koenhabets.yahtzeescore.Rules
 import nl.koenhabets.yahtzeescore.adapters.PlayerAdapter
-import nl.koenhabets.yahtzeescore.data.AppDatabase
 import nl.koenhabets.yahtzeescore.data.DataManager
 import nl.koenhabets.yahtzeescore.data.Game
 import nl.koenhabets.yahtzeescore.data.MigrateData
@@ -57,7 +56,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var scoreView: ScoreView
     private var lastInitGame: Game? = null
-    private lateinit var appDatabase: AppDatabase
     var score = 0
     var name: String? = null
     private var nearbyEnabled = true
@@ -72,8 +70,6 @@ class MainActivity : AppCompatActivity() {
         val localPlayer = PlayerItem(id = "", null, null, null, 0, true, "")
         multiplayerPlayers.add(localPlayer)
         updateMultiplayerUI(multiplayerPlayers.indexOf(localPlayer), false)
-
-        appDatabase = AppDatabase.getDatabase(this)
 
         // Set the score to 0 to prevent showing the default score
         binding.textViewTotal.text = getString(R.string.Total, 0)
@@ -500,7 +496,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         Log.i("onStart", "start")
         val sharedPref = getSharedPreferences("nl.koenhabets.yahtzeescore", MODE_PRIVATE)
-        MigrateData(this, appDatabase.subscriptionDao(), subscriptionRepository)
+        MigrateData(this)
         if (Game.valueOf(
                 sharedPref.getString(
                     "game",

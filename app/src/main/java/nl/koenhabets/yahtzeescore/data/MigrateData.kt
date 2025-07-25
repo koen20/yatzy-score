@@ -4,15 +4,9 @@ import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import nl.koenhabets.yahtzeescore.data.dao.SubscriptionDao
 
 
-class MigrateData(
-    context: Context,
-    subscriptionDao: SubscriptionDao,
-    subscriptionRepository: SubscriptionRepository
-) {
+class MigrateData(context: Context) {
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     //run in onStart in main activity
@@ -67,20 +61,13 @@ class MigrateData(
             configVersion = 2
         }
 
-        // V2.1.1 (58) try to remove incorrect entries from database
+        // V2.1.1 (58) try to remove incorrect entries from database // database removed
         if (configVersion == 2) {
-            scope.launch {
-                subscriptionDao.deleteUserIdNull()
-            }
             configVersion = 3
         }
 
-        // V2.2 (59) Move subscriptions from database to file
+        // V2.2 (59) Move subscriptions from database to file // database removed
         if (configVersion == 3) {
-            scope.launch {
-                val existingSubscriptions = subscriptionDao.getAll()
-                subscriptionRepository.insert(existingSubscriptions)
-            }
             configVersion = 4
         }
 
