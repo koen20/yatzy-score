@@ -74,13 +74,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--https://github.com/google/play-services-plugins/issues/296 not edge to edge ready-->
-        <activity
-            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
-            android:theme="@style/FeatureSettings.Theme.OptOutEdgeToEdgeEnforcement" />
-        <activity
-            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
-            android:theme="@style/FeatureSettings.Theme.OptOutEdgeToEdgeEnforcement" />
     </application>
 
 </manifest>
