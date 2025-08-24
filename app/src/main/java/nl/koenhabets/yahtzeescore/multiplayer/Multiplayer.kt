@@ -6,6 +6,7 @@ import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ import org.json.JSONObject
 import java.security.SecureRandom
 import java.util.Date
 import java.util.Timer
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.concurrent.timerTask
 
 class Multiplayer(
@@ -30,7 +32,7 @@ class Multiplayer(
     private val subscriptionRepository: SubscriptionRepository
 ) {
     private var listener: MultiplayerListener? = null
-    private val subscriptions: MutableList<Subscription> = ArrayList()
+    private val subscriptions: MutableList<Subscription> = CopyOnWriteArrayList()
     private var yatzyServerClient: YatzyServerClient? = null
     private var updateTimer: Timer? = null
     private var score = 0
@@ -65,13 +67,13 @@ class Multiplayer(
             userKey = sharedPref.getString("userKey", null)
         } else {
             userKey = getRandomString(60)
-            sharedPref.edit().putString("userKey", userKey).apply()
+            sharedPref.edit { putString("userKey", userKey) }
         }
         if (sharedPref.contains("userId")) {
             userId = sharedPref.getString("userId", null)
         } else {
             userId = getRandomString(50)
-            sharedPref.edit().putString("userId", userId).apply()
+            sharedPref.edit { putString("userId", userId) }
         }
 
         if (userKey != null && userId != null) {
