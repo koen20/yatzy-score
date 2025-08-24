@@ -4,12 +4,9 @@ import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import nl.koenhabets.yahtzeescore.model.Subscription
-import org.json.JSONException
 import java.io.File
-import java.io.IOException
 
 class SubscriptionRepository(val context: Context) {
     private val fileName = "subscriptions.json"
@@ -18,9 +15,8 @@ class SubscriptionRepository(val context: Context) {
         try {
             val jsonString = File(context.filesDir, fileName).readText()
             Json.decodeFromString<List<Subscription>>(jsonString)
-        } catch (e: IOException) {
-            emptyList()
-        } catch (e: JSONException) {
+        } catch (e: Exception) {
+            e.printStackTrace()
             emptyList()
         }
     }
