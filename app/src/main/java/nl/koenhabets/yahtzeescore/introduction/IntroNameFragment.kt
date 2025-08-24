@@ -35,7 +35,7 @@ class IntroNameFragment : Fragment(), SlidePolicy {
     }
 
     fun getName(): String {
-        return editText.text.toString()
+        return if (::editText.isInitialized) editText.text.toString() else ""
     }
 
     companion object {
