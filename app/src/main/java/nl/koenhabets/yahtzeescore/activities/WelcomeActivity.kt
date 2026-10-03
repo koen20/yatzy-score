@@ -1,9 +1,15 @@
 package nl.koenhabets.yahtzeescore.activities
 
-import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import com.github.appintro.AppIntro
 import nl.koenhabets.yahtzeescore.introduction.IntroGameFragment
@@ -16,7 +22,13 @@ class WelcomeActivity : AppIntro() {
     private lateinit var gameFragment: IntroGameFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge(
+            navigationBarStyle = SystemBarStyle.auto(
+                Color.TRANSPARENT,
+                Color.TRANSPARENT
+            )
+        )
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         gameFragment = IntroGameFragment.newInstance()
         multiFragment = IntroMultiFragment.newInstance()
         nameFragment = IntroNameFragment.newInstance()
@@ -27,6 +39,16 @@ class WelcomeActivity : AppIntro() {
         showStatusBar(true)
         isWizardMode = true
         supportActionBar?.hide()
+
+        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(0, systemBarsInsets.top, 0, systemBarsInsets.bottom)
+            insets
+        }
+
+        val windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
+        windowInsetsController.isAppearanceLightStatusBars = false
+        windowInsetsController.isAppearanceLightNavigationBars = false
     }
 
     override fun onSkipPressed(currentFragment: Fragment?) {
@@ -54,7 +76,7 @@ class WelcomeActivity : AppIntro() {
         val multiplayer = multiFragment.multiplayerEnabled()
         val game = gameFragment.getGame()
 
-        val sharedPref = getSharedPreferences("nl.koenhabets.yahtzeescore", Context.MODE_PRIVATE);
+        val sharedPref = getSharedPreferences("nl.koenhabets.yahtzeescore", MODE_PRIVATE)
         val edit = sharedPref.edit()
         if (multiplayer) {
             edit.putString("name", name)
