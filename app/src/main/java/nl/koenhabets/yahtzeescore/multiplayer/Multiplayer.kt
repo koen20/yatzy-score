@@ -10,7 +10,6 @@ import androidx.core.content.edit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import nl.koenhabets.yahtzeescore.BuildConfig
 import nl.koenhabets.yahtzeescore.Permissions
 import nl.koenhabets.yahtzeescore.data.SubscriptionRepository
 import nl.koenhabets.yahtzeescore.model.NearbyMessage
@@ -76,9 +75,13 @@ class Multiplayer(
             sharedPref.edit { putString("userId", userId) }
         }
 
+        val pm = context.packageManager
+        val packageName = context.packageName
+        val info = pm.getPackageInfo(packageName, 0)
+
         if (userKey != null && userId != null) {
             yatzyServerClient =
-                YatzyServerClient(userId!!, userKey, BuildConfig.VERSION_CODE)
+                YatzyServerClient(userId!!, userKey, info.versionCode)
             yatzyServerClient?.username = name
             yatzyServerClient?.setYatzyClientListener(object : YatzyClientListener {
                 override fun onScore(score: ScoreResponse) {
@@ -221,13 +224,17 @@ class Multiplayer(
         yatzyServerClient?.game = game
     }
 
-    fun endGame(game: String, versionString: String, versionCode: Int) {
+    fun endGame(game: String) {
+        val pm = context.packageManager
+        val packageName = context.packageName
+        val info = pm.getPackageInfo(packageName, 0)
+
         var gameSend = game
         val testLabSetting = Settings.System.getString(context.contentResolver, "firebase.test.lab")
         if ("true" == testLabSetting || "generic".equals(Build.BRAND, ignoreCase = true)) {
             gameSend = "test"
         }
-        yatzyServerClient?.endGame(gameSend, versionString, versionCode)
+        yatzyServerClient?.endGame(gameSend, info.versionName ?: "", info.versionCode)
     }
 
     fun stopMultiplayer() {

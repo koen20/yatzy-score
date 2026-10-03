@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import nl.koenhabets.yahtzeescore.AppUpdates
-import nl.koenhabets.yahtzeescore.BuildConfig
 import nl.koenhabets.yahtzeescore.Permissions
 import nl.koenhabets.yahtzeescore.R
 import nl.koenhabets.yahtzeescore.Rules
@@ -216,11 +215,8 @@ class MainActivity : AppCompatActivity() {
             builder2.setPositiveButton(R.string.yes) { _: DialogInterface, _: Int ->
                 if (multiplayerEnabled) {
                     if (score > 40) {
-                        multiplayer?.endGame(
-                            (lastInitGame ?: "").toString(),
-                            BuildConfig.VERSION_NAME,
-                            BuildConfig.VERSION_CODE
-                        )
+
+                        multiplayer?.endGame((lastInitGame ?: "").toString())
                     }
                 }
                 scoreView.clearScores()
@@ -245,11 +241,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
             if (multiplayerEnabled) {
-                multiplayer?.endGame(
-                    (lastInitGame ?: "").toString(),
-                    BuildConfig.VERSION_NAME,
-                    BuildConfig.VERSION_CODE
-                )
+                multiplayer?.endGame((lastInitGame ?: "").toString())
             }
             scoreView.clearScores()
         }
